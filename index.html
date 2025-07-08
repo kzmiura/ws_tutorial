@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>ws</h1>
+    <p>Sends a ping every five seconds</p>
+    <form id="form">
+        <label for="message">
+            message: 
+            <input type="text" name="message" id="message">
+        </label>
+        <button>send</button>
+    </form>
+    <div id="output"></div>
+
+    <script>
+        const form = document.getElementById('form')
+        form.addEventListener('submit', e => {
+            e.preventDefault()
+            const message = document.getElementById('message')
+            sendMessage(message.value)
+            message.value = ''
+        })
+
+        const wsUrl = 'ws://0.0.0.0:8000/'
+        const output = document.getElementById('output')
+        const ws = new WebSocket(wsUrl)
+
+        function writeToScreen(message) {
+            output.insertAdjacentHTML('afterbegin', `<p>${message}</p>`)
+        }
+
+        function sendMessage(message) {
+            writeToScreen(`SENT: ${message}`)
+            ws.send(message)
+        }
+
+        ws.onopen = e => {
+            writeToScreen('CONNECTED')
+        }
+
+        ws.onclose = e => {
+            writeToScreen('DISCONNECTED')
+        }
+
+        ws.onmessage = e => {
+            writeToScreen(`RECEIVED: ${e.data}`)
+        }
+
+        ws.onerror = e => {
+            writeToScreen(`ERROR: ${e.data}`)
+        }
+    </script>
+</body>
+</html>
