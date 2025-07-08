@@ -3,7 +3,7 @@
 ## Start server
 
 ```bash
-deno -A main.ts
+deno task dev
 ```
 
 ## What is this?
